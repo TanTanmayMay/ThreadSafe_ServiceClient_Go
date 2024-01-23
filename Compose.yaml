@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=nishant
+      - POSTGRES_DB=tanmay
+      - POSTGRES_PASSWORD=om
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+  clientService:
+    container_name: go_client
+    image: cosmtrek/air:latest
+    working_dir: /go/src/bitglaze/test
+    command: air -c ./.airClient.toml
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/go/src/bitglaze/test
+
+  connectionManager:
+    container_name: go_conMgr
+    image: cosmtrek/air:latest
+    working_dir: /go/src/bitglaze/test
+    command: air -c ./.airManager.toml
+    ports:
+      - 8001:8001
+    volumes:
+      - ./:/go/src/bitglaze/test
+
+  serverA:
+    container_name: go_serverA
+    image: cosmtrek/air:latest
+    working_dir: /go/src/bitglaze/test
+    command: air -c ./.airServerA.toml
+    ports:
+      - 8002:8002
+    volumes:
+      - ./:/go/src/bitglaze/test
+
+  serverB:
+    container_name: go_serverB
+    image: cosmtrek/air:latest
+    working_dir: /go/src/bitglaze/test
+    command: air -c ./.airServerB.toml
+    ports:
+      - 8003:8003
+    volumes:
+      - ./:/go/src/bitglaze/test
+
+volumes:
+  postgres-db:
